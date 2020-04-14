@@ -2,20 +2,25 @@ import os
 import redis
 import json
 import time
+
 from sanic import Sanic
 from sanic.response import json as sanic_json
 from sanic import response
+
 from spotify_token_util import get_spotify_token_info
+from api_wrapper import get_track_ids_from_playlist_id
+
+# https://github.com/huge-success/sanic/blob/master/examples/try_everything.py
 
 app = Sanic( name="Spotify API Server" )
 
 @app.route("/")
 def hello( request ):
-	return response.text( "You Found the Spotify API Server!" )
+	return response.text( "You Found the Spotify API Server!\n" )
 
 @app.route("/ping")
 def ping( request ):
-	return response.text( "pong" )
+	return response.text( "pong\n" )
 
 @app.route( "/token-info" , methods=[ "GET" ] )
 def token_info( request ):
@@ -23,6 +28,20 @@ def token_info( request ):
 		result = get_spotify_token_info()
 	except Exception as e:
 		result = { "message": "Couldn't Get Spotify Token" }
+	return sanic_json( result )
+
+@app.route( "/playlist-tracks" , methods=[ "GET" ] )
+def token_info( request ):
+	try:
+		token_info = get_spotify_token_info()
+		options = {
+			"access_token": token_info[ 'access_token' ] ,
+			"playlist_id": request.args.get( "playlist_id" )
+		}
+		track_ids = get_track_ids_from_playlist_id( options )
+		result = { "track_ids": track_ids }
+	except Exception as e:
+		result = { "message": "Couldn't Get Spotify Playlist Tracks" }
 	return sanic_json( result )
 
 def try_to_connect_to_redis():
@@ -64,9 +83,6 @@ def run_server():
 			return False
 		port = config[ 'spotify_api_server' ][ 'port' ]
 		app.run( host='127.0.0.1' , port=port )
-		#print( f"Server Starting on 0.0.0.0:{str(config[ 'spotify_api_server' ][ 'port' ])}" )
-		# http_server = WSGIServer( ( '' , config[ 'spotify_api_server' ][ 'port' ] ) , app )
-		# http_server.serve_forever()
 	except Exception as e:
 		print( "Couldn't Start Spotify API Server" )
 		print( e )
