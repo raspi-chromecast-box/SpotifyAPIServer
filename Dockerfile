@@ -14,4 +14,5 @@ RUN pip3 install Flask
 RUN pip3 install gevent
 
 COPY python_app /home/python_app
-ENTRYPOINT [ "python3" , "/home/python_app/server.py" ]
+WORKDIR "/home/python_app"
+ENTRYPOINT [ "flask" , "run" ]

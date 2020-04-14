@@ -3,7 +3,7 @@ import redis
 import json
 import time
 from flask import Flask , jsonify
-from gevent.pywsgi import WSGIServer
+#from gevent.pywsgi import WSGIServer
 from spotify_token_util import get_spotify_token_info
 
 app = Flask( "spotify_api_server" )
@@ -61,9 +61,10 @@ def run_server():
 		config = get_config( redis_connection )
 		if config == False:
 			return False
-		#app.run( host='0.0.0.0' , port=config[ 'spotify_api_server' ][ 'port' ] )
-		http_server = WSGIServer( ( '' , config[ 'spotify_api_server' ][ 'port' ] ) , app )
-		http_server.serve_forever()
+		app.run( host='0.0.0.0' , port=config[ 'spotify_api_server' ][ 'port' ] )
+		#print( f"Server Starting on 0.0.0.0:{str(config[ 'spotify_api_server' ][ 'port' ])}" )
+		# http_server = WSGIServer( ( '' , config[ 'spotify_api_server' ][ 'port' ] ) , app )
+		# http_server.serve_forever()
 	except Exception as e:
 		print( "Couldn't Start Spotify API Server" )
 		print( e )
