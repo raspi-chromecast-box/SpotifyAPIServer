@@ -9,15 +9,15 @@ from spotify_token_util import get_spotify_token_info
 app = Sanic()
 
 @app.route("/")
-def hello():
+def hello( request ):
 	return "You Found the Spotify API Server!"
 
 @app.route("/ping")
-def ping():
+def ping( request ):
 	return "pong"
 
 @app.route( "/token-info" , methods=[ "GET" ] )
-def token_info():
+def token_info( request ):
 	try:
 		result = get_spotify_token_info()
 	except Exception as e:
