@@ -10,15 +10,18 @@ from sanic import response
 from spotify_token_util import get_spotify_token_info
 from api_wrapper import get_track_ids_from_playlist_id
 
+# https://github.com/huge-success/sanic/tree/master/examples
 # https://github.com/huge-success/sanic/blob/master/examples/try_everything.py
+
+# https://sanic.readthedocs.io/en/latest/sanic/blueprints.html
 
 app = Sanic( name="Spotify API Server" )
 
-@app.route("/")
+@app.route( "/" )
 def hello( request ):
 	return response.text( "You Found the Spotify API Server!\n" )
 
-@app.route("/ping")
+@app.route( "/ping" )
 def ping( request ):
 	return response.text( "pong\n" )
 
@@ -43,6 +46,21 @@ def token_info( request ):
 	except Exception as e:
 		result = { "message": "Couldn't Get Spotify Playlist Tracks" }
 	return sanic_json( result )
+
+# @app.route( "/play-currated" , methods=[ "GET" ] )
+# def token_info( request ):
+# 	try:
+# 		token_info = get_spotify_token_info()
+# 		options = {
+# 			"access_token": token_info[ 'access_token' ] ,
+# 			"playlist_id": request.args.get( "playlist_id" )
+# 		}
+# 		track_ids = get_track_ids_from_playlist_id( options )
+# 		result = { "track_ids": track_ids }
+# 	except Exception as e:
+# 		result = { "message": "Couldn't Get Spotify Playlist Tracks" }
+# 	return sanic_json( result )
+
 
 def try_to_connect_to_redis():
 	try:

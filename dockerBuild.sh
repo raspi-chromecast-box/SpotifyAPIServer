@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo docker build -t alpine-chromecast-data-watcher .
+sudo docker build -t alpine-spotify-api-server .
