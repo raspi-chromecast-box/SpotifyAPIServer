@@ -63,7 +63,7 @@ def run_server():
 		if config == False:
 			return False
 		port = config[ 'spotify_api_server' ][ 'port' ]
-		app.run( host='0.0.0.0' , port=port )
+		app.run( host='127.0.0.1' , port=port )
 		#print( f"Server Starting on 0.0.0.0:{str(config[ 'spotify_api_server' ][ 'port' ])}" )
 		# http_server = WSGIServer( ( '' , config[ 'spotify_api_server' ][ 'port' ] ) , app )
 		# http_server.serve_forever()
