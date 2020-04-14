@@ -4,17 +4,18 @@ import json
 import time
 from sanic import Sanic
 from sanic.response import json as sanic_json
+from sanic import response
 from spotify_token_util import get_spotify_token_info
 
-app = Sanic()
+app = Sanic( name="Spotify API Server" )
 
 @app.route("/")
 def hello( request ):
-	return "You Found the Spotify API Server!"
+	return response.text( "You Found the Spotify API Server!" )
 
 @app.route("/ping")
 def ping( request ):
-	return "pong"
+	return response.text( "pong" )
 
 @app.route( "/token-info" , methods=[ "GET" ] )
 def token_info( request ):
