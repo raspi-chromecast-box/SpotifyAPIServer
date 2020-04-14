@@ -2,11 +2,11 @@ import os
 import redis
 import json
 import time
-from flask import Flask , jsonify
-#from gevent.pywsgi import WSGIServer
+from sanic import Sanic
+from sanic.response import json as sanic_json
 from spotify_token_util import get_spotify_token_info
 
-app = Flask( "spotify_api_server" )
+app = Sanic()
 
 @app.route("/")
 def hello():
@@ -22,7 +22,7 @@ def token_info():
 		result = get_spotify_token_info()
 	except Exception as e:
 		result = { "message": "Couldn't Get Spotify Token" }
-	return jsonify( result ) , 200
+	return sanic_json( result )
 
 def try_to_connect_to_redis():
 	try:
