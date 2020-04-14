@@ -1,0 +1,5 @@
+{
+	"spotify_api_server": {
+		"port": 9797
+	}
+}
