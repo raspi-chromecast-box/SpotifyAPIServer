@@ -1,6 +1,7 @@
 import os
 import redis
 import json
+import time
 from flask import Flask , jsonify
 from spotify_token_util import get_spotify_token_info
 
@@ -41,7 +42,7 @@ def get_config( redis_connection ):
 			config = json.loads( config )
 			return config
 		except Exception as e:
-			config_path = os.path.join( os.path.abspath( __file__ ) , "config.json" )
+			config_path = os.path.join( os.path.dirname( os.path.abspath( __file__ ) ) , "config.json" )
 			with open( config_path ) as f:
 			    config = json.load( f )
 			redis_connection.set( "CONFIG.SPOTIFY_API_SERVER" , json.dumps( config ) )
