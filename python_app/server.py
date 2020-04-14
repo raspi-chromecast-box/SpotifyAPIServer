@@ -2,7 +2,7 @@ import os
 import redis
 import json
 from flask import Flask , jsonify
-from token import get_spotify_token_info
+from spotify_token_util import get_spotify_token_info
 
 app = Flask( "spotify_api_server" )
 
