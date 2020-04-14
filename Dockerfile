@@ -11,7 +11,8 @@ RUN pip3 install redis
 RUN pip3 install schedule
 RUN pip3 install pprint
 RUN pip3 install Flask
-RUN pip3 install gevent
+RUN pip3 install python-dotenv
+#RUN pip3 install gevent
 
 COPY python_app /home/python_app
 WORKDIR "/home/python_app"

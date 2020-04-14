@@ -61,7 +61,8 @@ def run_server():
 		config = get_config( redis_connection )
 		if config == False:
 			return False
-		app.run( host='0.0.0.0' , port=config[ 'spotify_api_server' ][ 'port' ] )
+		port = config[ 'spotify_api_server' ][ 'port' ]
+		app.run( host='0.0.0.0' , port=port )
 		#print( f"Server Starting on 0.0.0.0:{str(config[ 'spotify_api_server' ][ 'port' ])}" )
 		# http_server = WSGIServer( ( '' , config[ 'spotify_api_server' ][ 'port' ] ) , app )
 		# http_server.serve_forever()
