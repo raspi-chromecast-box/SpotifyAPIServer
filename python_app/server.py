@@ -7,9 +7,7 @@ from sanic import Sanic
 from sanic.response import json as sanic_json
 from sanic import response
 
-from spotify_token_util import get_spotify_token_info
-from api_wrapper import get_track_ids_from_playlist_id
-
+from api.api_blueprint import api_blueprint
 from commands.commands_blueprint import commands_blueprint
 
 # https://github.com/huge-success/sanic/tree/master/examples
@@ -27,44 +25,8 @@ def hello( request ):
 def ping( request ):
 	return response.text( "pong\n" )
 
-@app.route( "/token-info" , methods=[ "GET" ] )
-def token_info( request ):
-	try:
-		result = get_spotify_token_info()
-	except Exception as e:
-		result = { "message": "Couldn't Get Spotify Token" }
-	return sanic_json( result )
-
-@app.route( "/playlist-tracks" , methods=[ "GET" ] )
-def token_info( request ):
-	try:
-		token_info = get_spotify_token_info()
-		options = {
-			"access_token": token_info[ 'access_token' ] ,
-			"playlist_id": request.args.get( "playlist_id" )
-		}
-		track_ids = get_track_ids_from_playlist_id( options )
-		result = { "track_ids": track_ids }
-	except Exception as e:
-		result = { "message": "Couldn't Get Spotify Playlist Tracks" }
-	return sanic_json( result )
-
+app.blueprint( api_blueprint )
 app.blueprint( commands_blueprint )
-
-# @app.route( "/play-currated" , methods=[ "GET" ] )
-# def token_info( request ):
-# 	try:
-# 		token_info = get_spotify_token_info()
-# 		options = {
-# 			"access_token": token_info[ 'access_token' ] ,
-# 			"playlist_id": request.args.get( "playlist_id" )
-# 		}
-# 		track_ids = get_track_ids_from_playlist_id( options )
-# 		result = { "track_ids": track_ids }
-# 	except Exception as e:
-# 		result = { "message": "Couldn't Get Spotify Playlist Tracks" }
-# 	return sanic_json( result )
-
 
 def try_to_connect_to_redis():
 	try:

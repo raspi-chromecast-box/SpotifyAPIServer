@@ -1,6 +1,6 @@
+from sanic import Blueprint
 from sanic.response import json
 from sanic import response
-from sanic import Blueprint
 
 from spotify_token_util import get_spotify_token_info
 
@@ -9,11 +9,6 @@ commands_blueprint = Blueprint( 'commands_blueprint' , url_prefix='/commands' )
 @commands_blueprint.route( '/' )
 def commands_root( request ):
 	return response.text( "you are at the /commands url\n" )
-
-@commands_blueprint.route( '/test' )
-def commands_test( request ):
-	result = get_spotify_token_info()
-	return json(result)
 
 @commands_blueprint.route( '/play' )
 def play( request ):
