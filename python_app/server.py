@@ -83,7 +83,7 @@ def get_config( redis_connection ):
 		except Exception as e:
 			config_path = os.path.join( os.path.dirname( os.path.abspath( __file__ ) ) , "config.json" )
 			with open( config_path ) as f:
-			    config = json.load( f )
+				config = json.load( f )
 			redis_connection.set( "CONFIG.SPOTIFY_API_SERVER" , json.dumps( config ) )
 			return config
 	except Exception as e:
@@ -93,14 +93,18 @@ def get_config( redis_connection ):
 
 def run_server():
 	try:
+
 		redis_connection = try_to_connect_to_redis()
 		if redis_connection == False:
 			return False
 		config = get_config( redis_connection )
 		if config == False:
 			return False
+
+		host = '0.0.0.0'
 		port = config[ 'spotify_api_server' ][ 'port' ]
-		app.run( host='0.0.0.0' , port=port )
+		app.run( host=host , port=port )
+
 	except Exception as e:
 		print( "Couldn't Start Spotify API Server" )
 		print( e )

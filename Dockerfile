@@ -1,4 +1,5 @@
 FROM python:3.7-alpine
+ARG BUILDPLATFORM
 RUN apk add bash
 RUN apk add nano
 RUN apk add alpine-sdk
@@ -48,8 +49,10 @@ RUN pip install schedule
 RUN pip install pprint
 RUN pip install sanic
 #RUN wget https://github.com/raspi-chromecast-box/Alpine-Linux-lxml-whl-4.5.0/raw/master/lxml-4.5.0-cp37-cp37m-linux_armv7l.whl
+#RUN pip install lxml-4.5.0-cp37-cp37m-linux_armv7l.whl
+COPY lxml-4.5.0-cp37-cp37m-linux_x86_64.whl /
 COPY lxml-4.5.0-cp37-cp37m-linux_armv7l.whl /
-RUN pip install lxml-4.5.0-cp37-cp37m-linux_armv7l.whl
+RUN if [ "x$BUILDPLATFORM" = "linux/amd64" ] ; then pip install lxml-4.5.0-cp37-cp37m-linux_x86_64.whl ; else pip install lxml-4.5.0-cp37-cp37m-linux_armv7l.whl ; fi
 RUN pip install spotify_token
 RUN pip install spotipy
 
