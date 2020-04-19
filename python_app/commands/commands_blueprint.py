@@ -10,6 +10,10 @@ commands_blueprint = Blueprint( 'commands_blueprint' , url_prefix='/commands' )
 def commands_root( request ):
 	return response.text( "you are at the /commands url\n" )
 
+def commands_test( request ):
+	result = get_spotify_token_info()
+	return json(result)
+
 @commands_blueprint.route( '/play' )
 def play( request ):
 	#return response.text( "you are at the /commands url\n" )
