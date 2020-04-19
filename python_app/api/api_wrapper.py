@@ -17,6 +17,7 @@ def get_track_ids_from_album_id( options ):
 		}
 		response = requests.get( f"https://api.spotify.com/v1/albums/{options['album_id']}/tracks" , headers=headers , params=data )
 		data = response.json()
+		print( data )
 		for i , item in enumerate( data[ 'items' ] ):
 			if 'track' in item:
 				if 'id' in item[ 'track' ]:

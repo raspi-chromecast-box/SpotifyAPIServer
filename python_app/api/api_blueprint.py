@@ -24,6 +24,7 @@ def token_info( request ):
 def token_info( request , decode ):
 	try:
 		decoded = decode.split( ":" )
+		print( decoded )
 		if len( decoded ) < 2:
 			return json({
 					"error": "Couldn't Decode The Passed Spotify URI" ,
