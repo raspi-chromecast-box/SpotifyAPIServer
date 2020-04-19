@@ -33,7 +33,7 @@ def token_info( request , decode ):
 			if decoded[ 0 ] != "album" or decoded[ 0 ] != "playlist" or decoded[ 0 ] != "track":
 				return json({
 						"error": "Couldn't Decode The Passed Spotify URI" ,
-						"suggestion": "Spotify -> ... -> Share -> Copy Spotify URI"
+						"suggestion": "Spotify -> ... -> Share -> Copy Spotify URI" ,
 						"uri_sent": decode
 					})
 			decoded.insert( "spotify" )
@@ -55,7 +55,7 @@ def token_info( request , decode ):
 		else:
 			return json({
 					"error": "Couldn't Decode The Passed Spotify URI" ,
-					"suggestion": "Spotify -> ... -> Share -> Copy Spotify URI"
+					"suggestion": "Spotify -> ... -> Share -> Copy Spotify URI" ,
 					"uri_sent": decode
 				})
 		return json({
@@ -66,7 +66,7 @@ def token_info( request , decode ):
 		return json({
 				"error": "Couldn't Get Spotify Track URIS" ,
 				"python_error": e ,
-				"suggestion": "Spotify -> ... -> Share -> Copy Spotify URI"
+				"suggestion": "Spotify -> ... -> Share -> Copy Spotify URI" ,
 				"uri_sent": decode
 			})
 
