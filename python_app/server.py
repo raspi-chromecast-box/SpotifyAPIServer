@@ -10,6 +10,8 @@ from sanic import response
 from spotify_token_util import get_spotify_token_info
 from api_wrapper import get_track_ids_from_playlist_id
 
+from commands_blueprint import commands_blueprint
+
 # https://github.com/huge-success/sanic/tree/master/examples
 # https://github.com/huge-success/sanic/blob/master/examples/try_everything.py
 
@@ -46,6 +48,8 @@ def token_info( request ):
 	except Exception as e:
 		result = { "message": "Couldn't Get Spotify Playlist Tracks" }
 	return sanic_json( result )
+
+app.blueprint( commands_blueprint )
 
 # @app.route( "/play-currated" , methods=[ "GET" ] )
 # def token_info( request ):

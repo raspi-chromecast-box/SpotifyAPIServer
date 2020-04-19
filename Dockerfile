@@ -52,7 +52,8 @@ RUN pip install sanic
 #RUN pip install lxml-4.5.0-cp37-cp37m-linux_armv7l.whl
 COPY lxml-4.5.0-cp37-cp37m-linux_x86_64.whl /
 COPY lxml-4.5.0-cp37-cp37m-linux_armv7l.whl /
-RUN if [ "x$BUILDPLATFORM" = "linux/amd64" ] ; then pip install lxml-4.5.0-cp37-cp37m-linux_x86_64.whl ; else pip install lxml-4.5.0-cp37-cp37m-linux_armv7l.whl ; fi
+#RUN if [ "x$BUILDPLATFORM" = "linux/amd64" ] ; then pip install lxml-4.5.0-cp37-cp37m-linux_x86_64.whl ; else pip install lxml-4.5.0-cp37-cp37m-linux_armv7l.whl ; fi
+RUN pip install lxml-4.5.0-cp37-cp37m-linux_x86_64.whl || pip install lxml-4.5.0-cp37-cp37m-linux_armv7l.whl
 RUN pip install spotify_token
 RUN pip install spotipy
 
