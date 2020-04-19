@@ -10,7 +10,7 @@ from sanic import response
 from spotify_token_util import get_spotify_token_info
 from api_wrapper import get_track_ids_from_playlist_id
 
-from .commands.commands_blueprint import commands_blueprint
+from commands.commands_blueprint import commands_blueprint
 
 # https://github.com/huge-success/sanic/tree/master/examples
 # https://github.com/huge-success/sanic/blob/master/examples/try_everything.py
