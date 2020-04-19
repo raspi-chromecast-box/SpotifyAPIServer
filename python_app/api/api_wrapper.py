@@ -19,9 +19,8 @@ def get_track_ids_from_album_id( options ):
 		data = response.json()
 		print( data )
 		for i , item in enumerate( data[ 'items' ] ):
-			if 'track' in item:
-				if 'id' in item[ 'track' ]:
-					tracks.append( item[ 'track' ][ 'id' ] )
+			if 'id' in item:
+				tracks.append( item[ 'id' ] )
 		#tracks.append( data[ 'items' ] )
 		offset = offset + len( data[ 'items' ] )
 		print( offset , "/" , data[ 'total' ] )
