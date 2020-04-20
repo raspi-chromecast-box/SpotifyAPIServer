@@ -40,7 +40,7 @@ class StatusListener:
 		self.redis_connection = redis_connection
 	def new_cast_status( self , status ):
 		#print( '[' , time.ctime() , ' - ' , self.name , '] status chromecast change:' )
-		#print( status )
+		pprint( status )
 		try:
 			key = "STATE.UUIDS." + self.uuid
 			db_object = {
@@ -76,7 +76,7 @@ class StatusMediaListener:
 		self.redis_connection = redis_connection
 	def new_media_status( self , status ):
 		#print( '[' , time.ctime() , ' - ' , self.name , '] status media change:' )
-		#print( status )
+		pprint( status )
 		try:
 			key = "STATE.MEDIA.UUIDS." + self.uuid
 			db_object = {
