@@ -145,6 +145,7 @@ def init_chromecast( options ):
 			shared_chromecast.media_controller.stop()
 		except Exception as e:
 			print( e )
+		input("Listening for Chromecast events...\n\n")
 	except Exception as e:
 		shared_chromecast = False
 		return False
