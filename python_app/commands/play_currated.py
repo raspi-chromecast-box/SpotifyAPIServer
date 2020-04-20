@@ -43,15 +43,15 @@ def play_currated( spotify_token_info , chromecast_output_ip , uris ):
 		print( e )
 		return False
 
-def try_run_block( options ):
-	for i in range( options[ 'number_of_tries' ] ):
-		attempt = options[ 'function_reference' ]()
-		if attempt is not False:
-			return attempt
-		print( f"Couldn't Run '{ options[ 'task_name' ] }', Sleeping for { str( options[ 'sleep_inbetween_seconds' ] ) } Seconds" )
-		time.sleep( options[ 'sleep_inbetween_seconds' ] )
-	if options[ 'reboot_on_failure' ] == True:
-		os.system( "reboot -f" )
+# def try_run_block( options ):
+# 	for i in range( options[ 'number_of_tries' ] ):
+# 		attempt = options[ 'function_reference' ]( options[ 'function_args' ] )
+# 		if attempt is not False:
+# 			return attempt
+# 		print( f"Couldn't Run '{ options[ 'task_name' ] }', Sleeping for { str( options[ 'sleep_inbetween_seconds' ] ) } Seconds" )
+# 		time.sleep( options[ 'sleep_inbetween_seconds' ] )
+# 	if options[ 'reboot_on_failure' ] == True:
+# 		os.system( "reboot -f" )
 
 # try_run_block({
 # 	"task_name": "Spotify Play Currated URIS" ,
