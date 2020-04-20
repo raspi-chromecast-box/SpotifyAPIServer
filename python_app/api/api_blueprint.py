@@ -96,4 +96,4 @@ def import_currated_all( request , message ):
 		redis_connection.sadd( 'SPOTIFY.CURRATED_URIS.ALL' , *uris )
 		return response.text( "imported\n" )
 	except Exception as e:
-		result = { "message": "Couldn't Import Spotify URIS" , "python_error": str( e ) }
+		return json({ "message": "Couldn't Import Spotify URIS" , "python_error": str( e ) })
