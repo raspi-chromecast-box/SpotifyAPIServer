@@ -75,9 +75,9 @@ def token_info( request , message ):
 		print( e )
 		return json({
 				"error": "Couldn't Get Spotify Track URIS" ,
-				"python_error": e ,
+				"python_error": str( e ) ,
 				"suggestion": "Spotify -> ... -> Share -> Copy Spotify URI" ,
-				"uri_sent": decode
+				"uri_sent": message
 			})
 
 @api_blueprint.route( "/import/currated/all/<message>" , methods=[ "GET" ] )
