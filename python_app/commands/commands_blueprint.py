@@ -8,6 +8,7 @@ import redis
 
 from spotify_token_util import get_spotify_token_info
 from .play_currated import play_currated_uris
+from .shared_cast_instance import *
 
 commands_blueprint = Blueprint( 'commands_blueprint' , url_prefix='/commands' )
 
@@ -97,6 +98,40 @@ def commands_root( request ):
 def play( request ):
 	#return response.text( "you are at the /commands url\n" )
 	return json({'my': 'blueprint'})
+
+@commands_blueprint.route( '/rebuild/list/currated/all' )
+def rebuild_list_currated_all( request ):
+	redis_connection = try_to_connect_to_redis()
+	uris = redis_connection.smembers( 'SPOTIFY.CURRATED_URIS.ALL' )
+	uris = list( map( lambda x: str( x , 'utf-8' ) , uris ) )
+	redis_connection.delete( 'SPOTIFY.CURRATED_URIS.ALL.LIST' )
+	redis_connection.rpush( 'SPOTIFY.CURRATED_URIS.ALL.LIST' , *uris )
+	return response.text( "rebuild the currated all list\n" )
+
+@commands_blueprint.route( '/play/list/currated/all' )
+def play_list_currated_all( request ):
+	redis_connection = try_to_connect_to_redis()
+	spotify_token_info = get_spotify_token_info()
+	chromecast_output_ip = redis_connection.get( "STATE.CHROMECAST_OUTPUT.IP" )
+	chromecast_output_ip = str( chromecast_output_ip , 'utf-8' )
+	uri = redis_next_in_circular_list( redis_connection , list_key )
+	result = play_currated_uris( spotify_token_info , chromecast_output_ip , [ uri ] )
+	return response.text( "playing the next track in currated all circular list\n" )
+
+@commands_blueprint.route( '/play/list/currated/all/test' )
+def play_list_currated_all( request ):
+	redis_connection = try_to_connect_to_redis()
+	spotify_token_info = get_spotify_token_info()
+	chromecast_output_ip = redis_connection.get( "STATE.CHROMECAST_OUTPUT.IP" )
+	chromecast_output_ip = str( chromecast_output_ip , 'utf-8' )
+	chromecast_output_uuid = redis_connection.get( "CONFIG.CHROMECAST_OUTPUT.UUID" )
+	chromecast_output_uuid = str( chromecast_output_uuid , 'utf-8' )
+	init_chromecast({
+			"chromecast_output_ip": chromecast_output_ip ,
+			"chromecast_output_uuid": chromecast_output_uuid
+		})
+	play_list_of_track_uris( [ "spotify:track:1gFNm7cXfG1vSMcxPpSxec" ] )
+	return response.text( "playing the next track in currated all circular list\n" )
 
 @commands_blueprint.route( '/play/currated' )
 def play_currated( request ):
