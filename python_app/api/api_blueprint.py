@@ -20,16 +20,18 @@ def try_to_connect_to_redis():
 
 def decode_spotify_uri_string( spotify_uri_string ):
 	decoded = spotify_uri_string.split( ":" )
-	print( decoded )
 	if len( decoded ) < 2:
 		return False
 	if len( decoded ) == 2:
 		if decoded[ 0 ] != "album" or decoded[ 0 ] != "playlist" or decoded[ 0 ] != "track":
 			return False
-	decoded.insert( "spotify" )
+		else:
+			decoded.insert( 0 , "spotify" )
 	return decoded
 
 def get_uris_from_decoded( decoded ):
+	print( "get_uris_from_decoded()" )
+	print( decoded )
 	if len( decoded ) < 3:
 		return []
 	if decoded[ 1 ] == "track":
