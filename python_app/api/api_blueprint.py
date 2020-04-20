@@ -2,6 +2,8 @@ from sanic import Blueprint
 from sanic.response import json
 from sanic import response
 
+import redis
+
 from .api_wrapper import get_track_ids_from_album_id
 from .api_wrapper import get_track_ids_from_playlist_id
 from spotify_token_util import get_spotify_token_info
