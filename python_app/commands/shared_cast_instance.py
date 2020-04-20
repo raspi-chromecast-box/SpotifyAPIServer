@@ -169,12 +169,12 @@ def launch_spotify_app():
 			print('Failed to launch spotify controller due to credential error')
 			return False
 		devices_available = shared_spotify_client.devices()
-		spotify_device_id = False
+		shared_spotify_device_id = False
 		for device in devices_available['devices']:
 			if device['id'] == sp.device:
-				spotify_device_id = device['id']
+				shared_spotify_device_id = device['id']
 				break
-		if not spotify_device_id:
+		if not shared_spotify_device_id:
 			print('No device with id "{}" known by Spotify'.format(sp.device))
 			print('Known devices: {}'.format(devices_available['devices']))
 			return False
@@ -193,7 +193,7 @@ def play_list_of_track_uris( uris ):
 			launch_spotify_app()
 		if shared_spotify_device_id == False:
 			launch_spotify_app()
-		shared_spotify_client.start_playback( device_id=spotify_device_id , uris=uris )
+		shared_spotify_client.start_playback( device_id=shared_spotify_device_id , uris=uris )
 		time.sleep( 2 )
 		return True
 	except Exception as e:
