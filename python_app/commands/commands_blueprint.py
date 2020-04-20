@@ -104,6 +104,7 @@ def play_currated( request ):
 
 	uris = redis_connection.smembers( 'SPOTIFY.CURRATED_URIS.ALL' )
 	uris = list( map( lambda x: str( x , 'utf-8' ) , uris ) )
+	uris = list( map( lambda x: 'spotify:track:' + x , uris ) )
 
 	print( uris )
 
