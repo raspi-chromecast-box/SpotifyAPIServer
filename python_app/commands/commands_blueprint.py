@@ -109,7 +109,7 @@ def play_currated( request ):
 	chromecast_output_ip = str( chromecast_output_ip , 'utf-8' )
 	print( chromecast_output_ip )
 
-	uris = redis_connection.srandmember( 'SPOTIFY.CURRATED_URIS.ALL' , 100 )
+	uris = redis_connection.srandmember( 'SPOTIFY.CURRATED_URIS.ALL' , 200 )
 	uris = list( map( lambda x: str( x , 'utf-8' ) , uris ) )
 	uris = shuffle_list( uris )
 	uris = shuffle_list( uris )

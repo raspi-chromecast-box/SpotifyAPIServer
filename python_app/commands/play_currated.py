@@ -12,6 +12,7 @@ def play_currated_uris( spotify_token_info , chromecast_output_ip , uris ):
 	try:
 		cast = Chromecast( chromecast_output_ip )
 		cast.wait()
+		cast.media_controller.stop()
 		client = spotipy.Spotify( auth=spotify_token_info[ "access_token" ] )
 		sp = SpotifyController( spotify_token_info[ "access_token" ] , spotify_token_info[ "seconds_left" ] )
 		cast.register_handler( sp )
