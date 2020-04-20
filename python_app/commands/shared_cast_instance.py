@@ -148,7 +148,7 @@ def init_chromecast( options ):
 		shared_chromecast = False
 		return False
 
-def launch_spotify_app( spotify_token_info ):
+def launch_spotify_app():
 	global shared_options
 	global shared_chromecast
 	global shared_spotify_client
