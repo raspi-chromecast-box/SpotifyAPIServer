@@ -6,7 +6,7 @@ from sanic import response
 import redis
 
 from spotify_token_util import get_spotify_token_info
-from .play_currated import play_currated
+from .play_currated import play_currated_uris
 
 commands_blueprint = Blueprint( 'commands_blueprint' , url_prefix='/commands' )
 
@@ -106,7 +106,7 @@ def play_currated( request ):
 
 	print( uris )
 
-	result = play_currated( spotify_token_info , chromecast_output_ip , uris )
+	result = play_currated_uris( spotify_token_info , chromecast_output_ip , uris )
 	#return response.text( "you are at the /commands url\n" )
 	return json( { 'result': result } )
 

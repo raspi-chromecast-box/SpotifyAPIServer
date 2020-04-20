@@ -8,7 +8,7 @@ from pychromecast import Chromecast
 from pychromecast.controllers.spotify import SpotifyController
 import spotipy
 
-def play_currated( spotify_token_info , chromecast_output_ip , uris ):
+def play_currated_uris( spotify_token_info , chromecast_output_ip , uris ):
 	try:
 		cast = Chromecast( chromecast_output_ip )
 		cast.wait()
