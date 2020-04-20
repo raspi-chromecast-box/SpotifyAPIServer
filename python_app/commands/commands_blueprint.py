@@ -8,6 +8,10 @@ from .play_currated import play_currated
 
 commands_blueprint = Blueprint( 'commands_blueprint' , url_prefix='/commands' )
 
+# https://github.com/andymccurdy/redis-py/blob/1f857f0053606c23cb3f1abd794e3efbf6981e09/tests/test_commands.py
+# https://github.com/ceberous/redis-manager-utils/blob/master/BaseClass.js
+# https://redis.io/commands/sadd
+
 def redis_previous_in_circular_list( redis_connection , list_key ):
 	list_key_index = f"{list_key}.INDEX"
 	# 1.) Get Length
@@ -100,7 +104,7 @@ def play_currated( request ):
 
 	result = play_currated( spotify_token_info , chromecast_output_ip , uris )
 	#return response.text( "you are at the /commands url\n" )
-	return json({'my': 'blueprint'})
+	return json( { 'result': result } )
 
 @commands_blueprint.route( '/pause' )
 def pause( request ):
