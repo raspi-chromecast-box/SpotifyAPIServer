@@ -22,17 +22,10 @@ def decode_spotify_uri_string( spotify_uri_string ):
 	decoded = spotify_uri_string.split( ":" )
 	print( decoded )
 	if len( decoded ) < 2:
-		return json({
-				"error": "Couldn't Decode The Passed Spotify URI" ,
-				"uri_sent": decode
-			})
+		return False
 	if len( decoded ) == 2:
 		if decoded[ 0 ] != "album" or decoded[ 0 ] != "playlist" or decoded[ 0 ] != "track":
-			return json({
-					"error": "Couldn't Decode The Passed Spotify URI" ,
-					"suggestion": "Spotify -> ... -> Share -> Copy Spotify URI" ,
-					"uri_sent": decode
-				})
+			return False
 	decoded.insert( "spotify" )
 	return decoded
 
