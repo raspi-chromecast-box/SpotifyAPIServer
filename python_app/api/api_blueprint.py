@@ -92,6 +92,7 @@ def import_currated_all( request , message ):
 	try:
 		decoded = decode_spotify_uri_string( message )
 		uris = get_uris_from_decoded( decoded )
+		print( uris )
 		redis_connection = try_to_connect_to_redis()
 		redis_connection.sadd( 'SPOTIFY.CURRATED_URIS.ALL' , *uris )
 		return response.text( "imported\n" )
