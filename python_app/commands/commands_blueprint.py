@@ -3,6 +3,8 @@ from sanic import Blueprint
 from sanic.response import json
 from sanic import response
 
+import redis
+
 from spotify_token_util import get_spotify_token_info
 from .play_currated import play_currated
 
@@ -89,7 +91,7 @@ def play( request ):
 	#return response.text( "you are at the /commands url\n" )
 	return json({'my': 'blueprint'})
 
-@commands_blueprint.route( '/play_currated' )
+@commands_blueprint.route( '/play/currated' )
 def play_currated( request ):
 
 	redis_connection = try_to_connect_to_redis()
@@ -101,6 +103,8 @@ def play_currated( request ):
 
 	uris = redis_connection.smembers( 'SPOTIFY.CURRATED_URIS.ALL' )
 	uris = map( lambda x: str( x , 'utf-8' ) , uris )
+
+	print( uris )
 
 	result = play_currated( spotify_token_info , chromecast_output_ip , uris )
 	#return response.text( "you are at the /commands url\n" )
