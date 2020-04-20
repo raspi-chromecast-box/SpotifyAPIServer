@@ -1,3 +1,4 @@
+import sys
 import random
 from sanic import Blueprint
 from sanic.response import json
@@ -82,6 +83,12 @@ def try_to_connect_to_redis():
 	except Exception as e:
 		return False
 
+def shuffle_list( list_to_shuffle ):
+	seed_int = random.randint( 0 , sys.maxsize )
+	random.seed( seed_int )
+	random.shuffle( list_to_shuffle )
+	return list_to_shuffle
+
 @commands_blueprint.route( '/' )
 def commands_root( request ):
 	return response.text( "you are at the /commands url\n" )
@@ -104,6 +111,9 @@ def play_currated( request ):
 
 	uris = redis_connection.smembers( 'SPOTIFY.CURRATED_URIS.ALL' )
 	uris = list( map( lambda x: str( x , 'utf-8' ) , uris ) )
+	uris = shuffle_list( uris )
+	uris = shuffle_list( uris )
+	uris = shuffle_list( uris )
 	uris = list( map( lambda x: 'spotify:track:' + x , uris ) )
 
 	print( uris )
