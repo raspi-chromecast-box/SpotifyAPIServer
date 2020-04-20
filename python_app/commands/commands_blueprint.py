@@ -127,6 +127,7 @@ def play_list_currated_all( request ):
 	chromecast_output_uuid = redis_connection.get( "CONFIG.CHROMECAST_OUTPUT.UUID" )
 	chromecast_output_uuid = str( chromecast_output_uuid , 'utf-8' )
 	init_chromecast({
+			"spotify_token_info": spotify_token_info ,
 			"chromecast_output_ip": chromecast_output_ip ,
 			"chromecast_output_uuid": chromecast_output_uuid
 		})

@@ -157,8 +157,8 @@ def launch_spotify_app( spotify_token_info ):
 		if shared_chromecast == False:
 			init_chromecast( shared_options )
 		shared_spotify_client = False
-		shared_spotify_client = spotipy.Spotify( auth=spotify_token_info[ "access_token" ] )
-		sp = SpotifyController( spotify_token_info[ "access_token" ] , spotify_token_info[ "seconds_left" ] )
+		shared_spotify_client = spotipy.Spotify( auth=shared_options[ 'spotify_token_info' ][ "access_token" ] )
+		sp = SpotifyController( shared_options[ 'spotify_token_info' ][ "access_token" ] , shared_options[ 'spotify_token_info' ][ "seconds_left" ] )
 		shared_chromecast.register_handler( sp )
 		sp.launch_app()
 		if not sp.is_launched and not sp.credential_error:
