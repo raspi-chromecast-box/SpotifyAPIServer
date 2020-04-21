@@ -144,12 +144,12 @@ def init_chromecast( options ):
 		shared_options = options
 		shared_chromecast = False
 		shared_chromecast = Chromecast( shared_options[ 'chromecast_output_ip' ] )
-		shared_chromecast.start()
+		#shared_chromecast.start()
 		shared_chromecast.wait()
-		shared_chromecast_listener = StatusListener( shared_chromecast.name , shared_chromecast , shared_options[ "chromecast_output_uuid" ] , shared_redis_connection )
-		shared_chromecast.register_status_listener( shared_chromecast_listener )
-		shared_chromecast_media_listener = StatusMediaListener( shared_chromecast.name , shared_chromecast , shared_options[ "chromecast_output_uuid" ] , shared_redis_connection )
-		shared_chromecast.media_controller.register_status_listener( shared_chromecast_media_listener )
+		#shared_chromecast_listener = StatusListener( shared_chromecast.name , shared_chromecast , shared_options[ "chromecast_output_uuid" ] , shared_redis_connection )
+		#shared_chromecast.register_status_listener( shared_chromecast_listener )
+		#shared_chromecast_media_listener = StatusMediaListener( shared_chromecast.name , shared_chromecast , shared_options[ "chromecast_output_uuid" ] , shared_redis_connection )
+		#shared_chromecast.media_controller.register_status_listener( shared_chromecast_media_listener )
 		start_adhoc_listener()
 		try:
 			shared_chromecast.media_controller.stop()
