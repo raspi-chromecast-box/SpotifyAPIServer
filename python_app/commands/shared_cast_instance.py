@@ -9,6 +9,7 @@ from pychromecast.controllers.spotify import SpotifyController
 import spotipy
 from pprint import pprint
 import redis
+import threading
 
 shared_redis_connection = False
 shared_options = False
@@ -31,6 +32,14 @@ def try_to_connect_to_redis():
 	except Exception as e:
 		print( e )
 		return False
+
+def start_adhoc_listener():
+	global shared_chromecast
+	try:
+		print( shared_chromecast.media_controller.status )
+	except Exception as e:
+		pass
+	threading.Timer( 3.0 , start_adhoc_listener ).start()
 
 class StatusListener:
 	def __init__( self , name , cast , uuid , redis_connection ):
@@ -141,11 +150,11 @@ def init_chromecast( options ):
 		shared_chromecast.register_status_listener( shared_chromecast_listener )
 		shared_chromecast_media_listener = StatusMediaListener( shared_chromecast.name , shared_chromecast , shared_options[ "chromecast_output_uuid" ] , shared_redis_connection )
 		shared_chromecast.media_controller.register_status_listener( shared_chromecast_media_listener )
+		start_adhoc_listener()
 		try:
 			shared_chromecast.media_controller.stop()
 		except Exception as e:
 			print( e )
-		#input("Listening for Chromecast events...\n\n")
 	except Exception as e:
 		shared_chromecast = False
 		return False
