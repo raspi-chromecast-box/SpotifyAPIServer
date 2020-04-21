@@ -36,11 +36,14 @@ def try_to_connect_to_redis():
 def start_adhoc_listener():
 	global shared_chromecast
 	try:
+		#['urn:x-cast:com.google.cast.tp.heartbeat', 'urn:x-cast:com.google.cast.tp.connection', 'urn:x-cast:com.google.cast.receiver', 'urn:x-cast:com.google.cast.media', 'urn:x-cast:com.spotify.chromecast.secure.v1']
 		#print( shared_chromecast.media_controller.status )
 		print( shared_chromecast.socket_client )
-		print( list( shared_chromecast.socket_client._handlers ) )
-		print( shared_chromecast.socket_client )
-		print( shared_chromecast.socket_client.media_controller.status )
+		#print( list( shared_chromecast.socket_client._handlers ) )
+		#print( shared_chromecast.socket_client )
+		#print( shared_chromecast.socket_client.media_controller.status )
+		print( shared_chromecast.socket_client._handlers[ 'urn:x-cast:com.spotify.chromecast.secure.v1' ] )
+		print( shared_chromecast.socket_client._handlers[ 'urn:x-cast:com.spotify.chromecast.secure.v1' ].status )
 		#print( shared_chromecast.spotify_controller.status )
 	except Exception as e:
 		pass
