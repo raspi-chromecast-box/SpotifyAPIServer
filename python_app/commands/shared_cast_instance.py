@@ -38,7 +38,8 @@ def start_adhoc_listener():
 	try:
 		#print( shared_chromecast.media_controller.status )
 		print( shared_chromecast.socket_client )
-		print( type( shared_chromecast.socket_client._handlers ) )
+		print( list( shared_chromecast.socket_client._handlers ) )
+		print( shared_chromecast.socket_client )
 		print( shared_chromecast.socket_client.media_controller.status )
 		#print( shared_chromecast.spotify_controller.status )
 	except Exception as e:
