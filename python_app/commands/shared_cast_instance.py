@@ -10,6 +10,7 @@ import spotipy
 from pprint import pprint
 import redis
 import threading
+import logging
 
 shared_redis_connection = False
 shared_options = False
@@ -43,7 +44,6 @@ def start_adhoc_listener():
 		#print( shared_chromecast.socket_client )
 		#print( shared_chromecast.socket_client.media_controller.status )
 		print( shared_chromecast.socket_client._handlers[ 'urn:x-cast:com.spotify.chromecast.secure.v1' ] )
-		print( shared_chromecast.socket_client._handlers[ 'urn:x-cast:com.spotify.chromecast.secure.v1' ].status )
 		#print( shared_chromecast.spotify_controller.status )
 	except Exception as e:
 		pass
@@ -158,7 +158,7 @@ def init_chromecast( options ):
 		shared_chromecast.register_status_listener( shared_chromecast_listener )
 		shared_chromecast_media_listener = StatusMediaListener( shared_chromecast.name , shared_chromecast , shared_options[ "chromecast_output_uuid" ] , shared_redis_connection )
 		shared_chromecast.media_controller.register_status_listener( shared_chromecast_media_listener )
-		start_adhoc_listener()
+		#start_adhoc_listener()
 		try:
 			shared_chromecast.media_controller.stop()
 		except Exception as e:
@@ -196,6 +196,13 @@ def launch_spotify_app():
 			print('No device with id "{}" known by Spotify'.format(sp.device))
 			print('Known devices: {}'.format(devices_available['devices']))
 			return False
+		spotify_logger = shared_chromecast.socket_client._handlers[ 'urn:x-cast:com.spotify.chromecast.secure.v1' ].logger
+		FORMAT = "%(process)s %(thread)s: %(message)s"
+		formatter = logging.Formatter(fmt=FORMAT)
+		handler = logging.StreamHandler()
+		handler.setFormatter(formatter)
+		spotify_logger.addHandler(handler)
+		spotify_logger.setLevel(logging.DEBUG)
 		return True
 	except Exception as e:
 		print( e )
