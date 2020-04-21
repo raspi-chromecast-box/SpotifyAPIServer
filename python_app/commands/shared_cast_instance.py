@@ -36,7 +36,8 @@ def try_to_connect_to_redis():
 def start_adhoc_listener():
 	global shared_chromecast
 	try:
-		print( shared_chromecast.media_controller.status )
+		#print( shared_chromecast.media_controller.status )
+		print( shared_chromecast )
 	except Exception as e:
 		pass
 	threading.Timer( 3.0 , start_adhoc_listener ).start()
