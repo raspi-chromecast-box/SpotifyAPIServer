@@ -34,6 +34,16 @@ def try_to_connect_to_redis():
 		print( e )
 		return False
 
+def attach_custom_logger():
+	global shared_chromecast
+	spotify_logger = shared_chromecast.socket_client._handlers[ 'urn:x-cast:com.spotify.chromecast.secure.v1' ].logger
+	FORMAT = "%(process)s %(thread)s: %(message)s"
+	formatter = logging.Formatter(fmt=FORMAT)
+	handler = logging.StreamHandler()
+	handler.setFormatter(formatter)
+	spotify_logger.addHandler(handler)
+	spotify_logger.setLevel(logging.DEBUG)
+
 def start_adhoc_listener():
 	global shared_chromecast
 	try:
@@ -187,7 +197,9 @@ def launch_spotify_app():
 			print('Failed to launch spotify controller due to credential error')
 			return False
 		devices_available = shared_spotify_client.devices()
-		shared_spotify_device_id = False
+		#shared_spotify_device_id = False
+		print( "Available Devices ==" )
+		print( devices_available['devices'] )
 		for device in devices_available['devices']:
 			if device['id'] == sp.device:
 				shared_spotify_device_id = device['id']
@@ -196,13 +208,6 @@ def launch_spotify_app():
 			print('No device with id "{}" known by Spotify'.format(sp.device))
 			print('Known devices: {}'.format(devices_available['devices']))
 			return False
-		spotify_logger = shared_chromecast.socket_client._handlers[ 'urn:x-cast:com.spotify.chromecast.secure.v1' ].logger
-		FORMAT = "%(process)s %(thread)s: %(message)s"
-		formatter = logging.Formatter(fmt=FORMAT)
-		handler = logging.StreamHandler()
-		handler.setFormatter(formatter)
-		spotify_logger.addHandler(handler)
-		spotify_logger.setLevel(logging.DEBUG)
 		return True
 	except Exception as e:
 		print( e )
