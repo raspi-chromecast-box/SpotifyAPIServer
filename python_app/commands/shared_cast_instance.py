@@ -37,8 +37,10 @@ def start_adhoc_listener():
 	global shared_chromecast
 	try:
 		#print( shared_chromecast.media_controller.status )
-		print( shared_chromecast.spotify_controller )
-		print( shared_chromecast.spotify_controller.status )
+		print( shared_chromecast.socket_client )
+		print( shared_chromecast.socket_client._handlers )
+		print( shared_chromecast.socket_client.media_controller )
+		#print( shared_chromecast.spotify_controller.status )
 	except Exception as e:
 		pass
 	threading.Timer( 3.0 , start_adhoc_listener ).start()
@@ -146,12 +148,13 @@ def init_chromecast( options ):
 		shared_options = options
 		shared_chromecast = False
 		shared_chromecast = Chromecast( shared_options[ 'chromecast_output_ip' ] )
-		#shared_chromecast.start()
+		shared_chromecast.start()
 		shared_chromecast.wait()
-		#shared_chromecast_listener = StatusListener( shared_chromecast.name , shared_chromecast , shared_options[ "chromecast_output_uuid" ] , shared_redis_connection )
-		#shared_chromecast.register_status_listener( shared_chromecast_listener )
-		#shared_chromecast_media_listener = StatusMediaListener( shared_chromecast.name , shared_chromecast , shared_options[ "chromecast_output_uuid" ] , shared_redis_connection )
-		#shared_chromecast.media_controller.register_status_listener( shared_chromecast_media_listener )
+		shared_chromecast_listener = StatusListener( shared_chromecast.name , shared_chromecast , shared_options[ "chromecast_output_uuid" ] , shared_redis_connection )
+		shared_chromecast.register_status_listener( shared_chromecast_listener )
+		shared_chromecast_media_listener = StatusMediaListener( shared_chromecast.name , shared_chromecast , shared_options[ "chromecast_output_uuid" ] , shared_redis_connection )
+		shared_chromecast.media_controller.register_status_listener( shared_chromecast_media_listener )
+		start_adhoc_listener()
 		try:
 			shared_chromecast.media_controller.stop()
 		except Exception as e:
@@ -189,8 +192,6 @@ def launch_spotify_app():
 			print('No device with id "{}" known by Spotify'.format(sp.device))
 			print('Known devices: {}'.format(devices_available['devices']))
 			return False
-		print( shared_chromecast.spotify_controller )
-		start_adhoc_listener()
 		return True
 	except Exception as e:
 		print( e )
