@@ -201,6 +201,13 @@ def launch_spotify_app():
 		print( "Available Devices ==" )
 		print( devices_available['devices'] )
 		for device in devices_available['devices']:
+			if device[ 'is_active' ] == True:
+				# if device[ 'name' ] == "Attic TV":
+				# 	shared_spotify_device_id = device['id']
+				# 	break
+				if device[ 'type' ] == "CastVideo":
+					shared_spotify_device_id = device['id']
+					break;
 			if device['id'] == sp.device:
 				shared_spotify_device_id = device['id']
 				break
