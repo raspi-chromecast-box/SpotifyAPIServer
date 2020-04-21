@@ -231,7 +231,7 @@ def play_list_of_track_uris( uris ):
 		if shared_spotify_device_id == False:
 			launch_spotify_app()
 		time.sleep( 2 )
-		print(.shared_spotify_device_id )
+		print( shared_spotify_device_id )
 		shared_spotify_client.start_playback( device_id=shared_spotify_device_id , uris=uris )
 		time.sleep( 2 )
 		return True
