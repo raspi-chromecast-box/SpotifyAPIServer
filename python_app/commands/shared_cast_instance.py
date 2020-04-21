@@ -230,6 +230,8 @@ def play_list_of_track_uris( uris ):
 			launch_spotify_app()
 		if shared_spotify_device_id == False:
 			launch_spotify_app()
+		time.sleep( 2 )
+		print(.shared_spotify_device_id )
 		shared_spotify_client.start_playback( device_id=shared_spotify_device_id , uris=uris )
 		time.sleep( 2 )
 		return True
@@ -245,7 +247,7 @@ def play_playlist_uri( playlist_uri ):
 			launch_spotify_app()
 		if shared_spotify_device_id == False:
 			launch_spotify_app()
-		shared_spotify_client.start_playback( device_id=spotify_device_id , context_uri=[ playlist_uri ] )
+		shared_spotify_client.start_playback( device_id=shared_spotify_device_id , context_uri=[ playlist_uri ] )
 		time.sleep( 2 )
 		return True
 	except Exception as e:
@@ -260,7 +262,7 @@ def play_album_uri( ablum_uri ):
 			launch_spotify_app()
 		if shared_spotify_device_id == False:
 			launch_spotify_app()
-		shared_spotify_client.start_playback( device_id=spotify_device_id , context_uri=[ ablum_uri ] )
+		shared_spotify_client.start_playback( device_id=shared_spotify_device_id , context_uri=[ ablum_uri ] )
 		time.sleep( 2 )
 		return True
 	except Exception as e:
