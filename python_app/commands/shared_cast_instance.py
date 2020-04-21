@@ -37,7 +37,8 @@ def start_adhoc_listener():
 	global shared_chromecast
 	try:
 		#print( shared_chromecast.media_controller.status )
-		print( shared_chromecast )
+		print( shared_chromecast.spotify_controller )
+		print( shared_chromecast.spotify_controller.status )
 	except Exception as e:
 		pass
 	threading.Timer( 3.0 , start_adhoc_listener ).start()
