@@ -152,7 +152,6 @@ def init_chromecast( options ):
 		#shared_chromecast.register_status_listener( shared_chromecast_listener )
 		#shared_chromecast_media_listener = StatusMediaListener( shared_chromecast.name , shared_chromecast , shared_options[ "chromecast_output_uuid" ] , shared_redis_connection )
 		#shared_chromecast.media_controller.register_status_listener( shared_chromecast_media_listener )
-		start_adhoc_listener()
 		try:
 			shared_chromecast.media_controller.stop()
 		except Exception as e:
@@ -190,6 +189,8 @@ def launch_spotify_app():
 			print('No device with id "{}" known by Spotify'.format(sp.device))
 			print('Known devices: {}'.format(devices_available['devices']))
 			return False
+		print( shared_chromecast.spotify_controller )
+		start_adhoc_listener()
 		return True
 	except Exception as e:
 		print( e )
