@@ -25,7 +25,7 @@ def redis_previous_in_circular_list( redis_connection , list_key ):
 
 	# 2.) Get Previous and Recylce in Necessary
 	recycled = False
-	circular_list_index = redis_connection.llen( list_key_index )
+	circular_list_index = redis_connection.get( list_key_index )
 	if circular_list_index is None:
 		circular_list_index = ( circular_list_length - 1 )
 		redis_connection.set( list_key_index , circular_list_index )
@@ -52,7 +52,7 @@ def redis_next_in_circular_list( redis_connection , list_key ):
 
 	# 2.) Get Next and Recycle if Necessary
 	recycled = False
-	circular_list_index = redis_connection.llen( list_key_index )
+	circular_list_index = redis_connection.get( list_key_index )
 	if circular_list_index is None:
 		circular_list_index = 0
 		redis_connection.set( list_key_index , '0' )
