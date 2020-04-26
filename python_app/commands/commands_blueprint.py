@@ -30,6 +30,7 @@ def redis_previous_in_circular_list( redis_connection , list_key ):
 		circular_list_index = ( circular_list_length - 1 )
 		redis_connection.set( list_key_index , circular_list_index )
 	else:
+		circular_list_index = int( circular_list_index )
 		circular_list_index -= 1
 		redis_connection.decr( list_key_index )
 
@@ -57,6 +58,7 @@ def redis_next_in_circular_list( redis_connection , list_key ):
 		circular_list_index = 0
 		redis_connection.set( list_key_index , '0' )
 	else:
+		circular_list_index = int( circular_list_index )
 		circular_list_index += 1
 		redis_connection.incr( list_key_index )
 
