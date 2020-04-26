@@ -118,20 +118,46 @@ def play_list_currated_all( request ):
 	result = play_currated_uris( spotify_token_info , chromecast_output_ip , [ uri ] )
 	return response.text( "playing the next track in currated all circular list\n" )
 
-@commands_blueprint.route( '/play/list/currated/all/test' )
-def play_list_currated_all( request ):
+
+def _play_list_currated_all_test_next_track():
 	redis_connection = try_to_connect_to_redis()
 	spotify_token_info = get_spotify_token_info()
 	chromecast_output_ip = redis_connection.get( "STATE.CHROMECAST_OUTPUT.IP" )
 	chromecast_output_ip = str( chromecast_output_ip , 'utf-8' )
 	chromecast_output_uuid = redis_connection.get( "CONFIG.CHROMECAST_OUTPUT.UUID" )
 	chromecast_output_uuid = str( chromecast_output_uuid , 'utf-8' )
-	init_chromecast({
-			"spotify_token_info": spotify_token_info ,
-			"chromecast_output_ip": chromecast_output_ip ,
-			"chromecast_output_uuid": chromecast_output_uuid
-		})
-	play_list_of_track_uris( [ "spotify:track:1gFNm7cXfG1vSMcxPpSxec" ] )
+	# init_chromecast({
+	# 		"spotify_token_info": spotify_token_info ,
+	# 		"chromecast_output_ip": chromecast_output_ip ,
+	# 		"chromecast_output_uuid": chromecast_output_uuid
+	# 	})
+	# play_list_of_track_uris( [ "spotify:track:1gFNm7cXfG1vSMcxPpSxec" ] )
+	uri = redis_next_in_circular_list( redis_connection , list_key )
+	print( "trying to play: " + uri )
+	result = play_currated_uris( spotify_token_info , chromecast_output_ip , [ uri ] )
+
+def redis_app_status_subscriber_handler( message ):
+	message = json.loads( message )
+	if "app" not in message:
+		return
+	if message[ "app" ] != "spotify":
+		return
+	print( message )
+	if "player_state" in message:
+		if message[ "player_state" ] == "PAUSED":
+			# slightly dangerous assumption, but unless "we" haven't tracked
+			# a pause via the USB button controller, then we are assuming this means the previously playing track is over
+			print( "assuming previously playing track is over" )
+			_play_list_currated_all_test_next_track()
+
+def _play_list_currated_all_test():
+	redis_connection = try_to_connect_to_redis()
+	pubsub = redis_connection.pubsub()
+	pubsub.subscribe( **{ "APPS-STATUS": redis_app_status_subscriber_handler } )
+
+@commands_blueprint.route( '/play/list/currated/all/test' )
+def play_list_currated_all_test( request ):
+	_play_list_currated_all_test()
 	return response.text( "playing the next track in currated all circular list\n" )
 
 @commands_blueprint.route( '/play/currated' )
