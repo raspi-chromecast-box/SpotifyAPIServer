@@ -40,6 +40,8 @@ def play_currated_uris( spotify_token_info , chromecast_output_ip , uris ):
 
 		client.start_playback( device_id=spotify_device_id , uris=uris )
 		time.sleep( 2 )
+		client.volume( 99 )
+		time.sleep( 2 )
 		client.volume( 100 )
 		client.shuffle( False )
 		return True
