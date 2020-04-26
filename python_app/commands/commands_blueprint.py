@@ -139,7 +139,7 @@ def _play_list_currated_all_test_next_track():
 	result = play_currated_uris( spotify_token_info , chromecast_output_ip , [ uri ] )
 
 def redis_app_status_subscriber_handler( message ):
-	print( message )
+	#print( message )
 	message = json.loads( message[ "data" ] )
 	if "app" not in message:
 		return
