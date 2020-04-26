@@ -134,6 +134,7 @@ def _play_list_currated_all_test_next_track():
 	# 	})
 	# play_list_of_track_uris( [ "spotify:track:1gFNm7cXfG1vSMcxPpSxec" ] )
 	uri = redis_next_in_circular_list( redis_connection , 'SPOTIFY.CURRATED_URIS.ALL.LIST' )
+	uri = f"spotify:track:{uri}"
 	print( "trying to play: " + uri )
 	result = play_currated_uris( spotify_token_info , chromecast_output_ip , [ uri ] )
 
