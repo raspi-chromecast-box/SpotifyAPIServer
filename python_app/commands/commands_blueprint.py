@@ -41,6 +41,7 @@ def redis_previous_in_circular_list( redis_connection , list_key ):
 		redis_connection.set( list_key_index , circular_list_index )
 
 	previous_in_circle = redis_connection.lindex( list_key , circular_list_index )
+	previous_in_circle = str( previous_in_circle , 'utf-8' )
 	return previous_in_circle
 
 def redis_next_in_circular_list( redis_connection , list_key ):
@@ -69,6 +70,7 @@ def redis_next_in_circular_list( redis_connection , list_key ):
 		redis_connection.set( list_key_index , '0' )
 
 	next_in_circle = redis_connection.lindex( list_key , circular_list_index )
+	next_in_circle = str( next_in_circle , 'utf-8' )
 	return next_in_circle
 
 def try_to_connect_to_redis():
