@@ -8,6 +8,9 @@ from pychromecast import Chromecast
 from pychromecast.controllers.spotify import SpotifyController
 import spotipy
 
+# Old Example
+# https://github.com/raspi-chromecast-box/WebServer/blob/f434683eff7d2e19ac926b54cf3f3739fadb0646/node_app/commands/Spotify/Play.py
+
 def play_currated_uris( spotify_token_info , chromecast_output_ip , uris ):
 	try:
 		cast = Chromecast( chromecast_output_ip )
@@ -35,6 +38,7 @@ def play_currated_uris( spotify_token_info , chromecast_output_ip , uris ):
 			print('Known devices: {}'.format(devices_available['devices']))
 			return False
 
+		client.volume( 100 )
 		client.start_playback( device_id=spotify_device_id , uris=uris )
 		time.sleep( 2 )
 		client.shuffle( False )
