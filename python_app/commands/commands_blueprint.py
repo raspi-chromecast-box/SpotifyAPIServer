@@ -154,6 +154,7 @@ def _play_list_currated_all_test():
 	redis_connection = try_to_connect_to_redis()
 	pubsub = redis_connection.pubsub()
 	pubsub.subscribe( **{ "APPS-STATUS": redis_app_status_subscriber_handler } )
+	_play_list_currated_all_test_next_track()
 
 @commands_blueprint.route( '/play/list/currated/all/test' )
 def play_list_currated_all_test( request ):
