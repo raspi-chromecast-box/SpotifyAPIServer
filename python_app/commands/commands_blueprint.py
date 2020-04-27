@@ -1,95 +1,18 @@
 import sys
 import random
+
 from sanic import Blueprint
 from sanic.response import json
 from sanic import response
 
-import redis
+import generic_utils
+import redis_utils
 
 from spotify_token_util import get_spotify_token_info
 from .play_currated import play_currated_uris
 from .shared_cast_instance import *
 
-commands_blueprint = Blueprint( 'commands_blueprint' , url_prefix='/commands' )
-
-# https://github.com/andymccurdy/redis-py/blob/1f857f0053606c23cb3f1abd794e3efbf6981e09/tests/test_commands.py
-# https://github.com/ceberous/redis-manager-utils/blob/master/BaseClass.js
-# https://redis.io/commands/sadd
-
-def redis_previous_in_circular_list( redis_connection , list_key ):
-	list_key_index = f"{list_key}.INDEX"
-	# 1.) Get Length
-	circular_list_length = redis_connection.llen( list_key )
-	if circular_list_length < 1:
-		return False
-
-	# 2.) Get Previous and Recylce in Necessary
-	recycled = False
-	circular_list_index = redis_connection.get( list_key_index )
-	if circular_list_index is None:
-		circular_list_index = ( circular_list_length - 1 )
-		redis_connection.set( list_key_index , circular_list_index )
-	else:
-		circular_list_index = int( circular_list_index )
-		circular_list_index -= 1
-		redis_connection.decr( list_key_index )
-
-	# 3.) Recycle Test
-	if circular_list_index < 0:
-		circular_list_index = ( circular_list_length - 1 )
-		recycled = True
-		redis_connection.set( list_key_index , circular_list_index )
-
-	previous_in_circle = redis_connection.lindex( list_key , circular_list_index )
-	previous_in_circle = str( previous_in_circle , 'utf-8' )
-	return previous_in_circle
-
-def redis_next_in_circular_list( redis_connection , list_key ):
-	list_key_index = f"{list_key}.INDEX"
-	# 1.) Get Length
-	circular_list_length = redis_connection.llen( list_key )
-	circular_list_length = circular_list_length
-	if circular_list_length < 1:
-		return False
-
-	# 2.) Get Next and Recycle if Necessary
-	recycled = False
-	circular_list_index = redis_connection.get( list_key_index )
-	if circular_list_index is None:
-		circular_list_index = 0
-		redis_connection.set( list_key_index , '0' )
-	else:
-		circular_list_index = int( circular_list_index )
-		circular_list_index += 1
-		redis_connection.incr( list_key_index )
-
-	# 3.) Recycle Test
-	if circular_list_index > ( circular_list_length - 1 ):
-		circular_list_index = 0
-		recycled = True
-		redis_connection.set( list_key_index , '0' )
-
-	next_in_circle = redis_connection.lindex( list_key , circular_list_index )
-	next_in_circle = str( next_in_circle , 'utf-8' )
-	return next_in_circle
-
-def try_to_connect_to_redis():
-	try:
-		redis_connection = redis.StrictRedis(
-			host="127.0.0.1" ,
-			port="6379" ,
-			db=1 ,
-			#password=ConfigDataBase.self[ 'redis' ][ 'password' ]
-			)
-		return redis_connection
-	except Exception as e:
-		return False
-
-def shuffle_list( list_to_shuffle ):
-	seed_int = random.randint( 0 , sys.maxsize )
-	random.seed( seed_int )
-	random.shuffle( list_to_shuffle )
-	return list_to_shuffle
+commands_blueprint = Blueprint( "commands_blueprint" , url_prefix="/commands" )
 
 @commands_blueprint.route( '/' )
 def commands_root( request ):
@@ -102,91 +25,29 @@ def play( request ):
 
 @commands_blueprint.route( '/rebuild/list/currated/all' )
 def rebuild_list_currated_all( request ):
-	redis_connection = try_to_connect_to_redis()
+	redis_connection = redis_utils.try_to_connect_to_redis()
 	uris = redis_connection.smembers( 'SPOTIFY.CURRATED_URIS.ALL' )
 	uris = list( map( lambda x: str( x , 'utf-8' ) , uris ) )
 	redis_connection.delete( 'SPOTIFY.CURRATED_URIS.ALL.LIST' )
 	redis_connection.rpush( 'SPOTIFY.CURRATED_URIS.ALL.LIST' , *uris )
 	return response.text( "rebuild the currated all list\n" )
 
-@commands_blueprint.route( '/play/list/currated/all' )
-def play_list_currated_all( request ):
-	redis_connection = try_to_connect_to_redis()
-	spotify_token_info = get_spotify_token_info()
-	chromecast_output_ip = redis_connection.get( "STATE.CHROMECAST_OUTPUT.IP" )
-	chromecast_output_ip = str( chromecast_output_ip , 'utf-8' )
-	uri = redis_next_in_circular_list( redis_connection , list_key )
-	result = play_currated_uris( spotify_token_info , chromecast_output_ip , [ uri ] )
-	return response.text( "playing the next track in currated all circular list\n" )
-
-
-def _play_list_currated_all_test_next_track():
-	redis_connection = try_to_connect_to_redis()
-	spotify_token_info = get_spotify_token_info()
-	chromecast_output_ip = redis_connection.get( "STATE.CHROMECAST_OUTPUT.IP" )
-	chromecast_output_ip = str( chromecast_output_ip , 'utf-8' )
-	chromecast_output_uuid = redis_connection.get( "CONFIG.CHROMECAST_OUTPUT.UUID" )
-	chromecast_output_uuid = str( chromecast_output_uuid , 'utf-8' )
-	# init_chromecast({
-	# 		"spotify_token_info": spotify_token_info ,
-	# 		"chromecast_output_ip": chromecast_output_ip ,
-	# 		"chromecast_output_uuid": chromecast_output_uuid
-	# 	})
-	# play_list_of_track_uris( [ "spotify:track:1gFNm7cXfG1vSMcxPpSxec" ] )
-	uri = redis_next_in_circular_list( redis_connection , 'SPOTIFY.CURRATED_URIS.ALL.LIST' )
-	uri = f"spotify:track:{uri}"
-	print( "trying to play: " + uri )
-	result = play_currated_uris( spotify_token_info , chromecast_output_ip , [ uri ] )
-
-def redis_app_status_subscriber_handler( message ):
-	#print( message )
-	message = json.loads( message[ "data" ] )
-	if "app" not in message:
-		return
-	if message[ "app" ] != "spotify":
-		return
-	print( message )
-	if "player_state" in message:
-		if message[ "player_state" ] == "PAUSED":
-			# slightly dangerous assumption, but unless "we" haven't tracked
-			# a pause via the USB button controller, then we are assuming this means the previously playing track is over
-			print( "assuming previously playing track is over" )
-			_play_list_currated_all_test_next_track()
-
-def _play_list_currated_all_test():
-	redis_connection = try_to_connect_to_redis()
-	pubsub = redis_connection.pubsub()
-	pubsub.subscribe( **{ "APPS-STATUS": redis_app_status_subscriber_handler } )
-	_play_list_currated_all_test_next_track()
-
 @commands_blueprint.route( '/play/list/currated/all/test' )
 def play_list_currated_all_test( request ):
-	_play_list_currated_all_test()
+	config = generic_utils.get_common_config()
+	uri = redis_utils.next_in_circular_list( config[ "redis_connection" ] , 'SPOTIFY.CURRATED_URIS.ALL.LIST' )
+	uri = f"spotify:track:{uri}"
+	print( "trying to play: " + uri )
+	result = play_currated_uris( config[ "spotify_token_info" ] , config[ "chromecast_output_ip" ] , [ uri ] )
 	return response.text( "playing the next track in currated all circular list\n" )
 
 @commands_blueprint.route( '/play/currated' )
 def play_currated( request ):
-
-	redis_connection = try_to_connect_to_redis()
-
-	spotify_token_info = get_spotify_token_info()
-
-	chromecast_output_ip = redis_connection.get( "STATE.CHROMECAST_OUTPUT.IP" )
-	chromecast_output_ip = str( chromecast_output_ip , 'utf-8' )
-	print( chromecast_output_ip )
-
-	uris = redis_connection.srandmember( 'SPOTIFY.CURRATED_URIS.ALL' , 200 )
-	uris = list( map( lambda x: str( x , 'utf-8' ) , uris ) )
-	uris = shuffle_list( uris )
-	uris = shuffle_list( uris )
-	uris = shuffle_list( uris )
-	uris = list( map( lambda x: 'spotify:track:' + x , uris ) )
-
-	print( uris )
-
-	result = play_currated_uris( spotify_token_info , chromecast_output_ip , uris )
-	#return response.text( "you are at the /commands url\n" )
-	return json( { 'result': result } )
+	config = generic_utils.get_common_config()
+	uris = config[ "redis_connection" ].srandmember( 'SPOTIFY.CURRATED_URIS.ALL' , 200 )
+	uris = generic_utils.prepare_random_track_uris( uris )
+	result = play_currated_uris( config[ "spotify_token_info" ] , config[ "chromecast_output_ip" ] , uris )
+	return json( { 'result': result , 'uris': uris } )
 
 @commands_blueprint.route( '/pause' )
 def pause( request ):
@@ -218,3 +79,9 @@ def shuffle_true( request ):
 	#return response.text( "you are at the /commands url\n" )
 	return json({'my': 'blueprint'})
 
+@commands_blueprint.route( '/spotify-paused' )
+def spotify_paused( request ):
+	print( "they told us spotify is now paused" )
+	print( "we are assuming that we did not do this via a usb-button" )
+	print( "so if STATE.PLAYING_CURRATED = true , or something like that, start off the next currated track" )
+	return response.text( "gracias\n" )

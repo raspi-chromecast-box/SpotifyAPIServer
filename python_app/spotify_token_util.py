@@ -8,20 +8,9 @@ import pychromecast
 from pychromecast import Chromecast
 from pychromecast.controllers.spotify import SpotifyController
 import spotify_token as st
-import redis
 import spotipy
 
-def try_to_connect_to_redis():
-	try:
-		redis_connection = redis.StrictRedis(
-			host="127.0.0.1" ,
-			port="6379" ,
-			db=1 ,
-			#password=ConfigDataBase.self[ 'redis' ][ 'password' ]
-			)
-		return redis_connection
-	except Exception as e:
-		return False
+import redis_utils
 
 def GenerateSpotifyToken( options ):
 	try:
@@ -76,9 +65,10 @@ def RefreshSpotifyTokenIfNecessary( redis_connection ):
 		print( e )
 		return False
 
-def get_spotify_token_info():
+def get_spotify_token_info( redis_connection=None ):
 	try:
-		redis_connection = try_to_connect_to_redis()
+		if redis_connection is None:
+			redis_connection = redis_utils.try_to_connect_to_redis()
 		if redis_connection == False:
 			return False
 		spotify_token_info = RefreshSpotifyTokenIfNecessary( redis_connection )
