@@ -14,7 +14,7 @@ import redis_utils
 
 def GenerateSpotifyToken( options ):
 	try:
-		print( "Generating Spotify Token" )
+		print("Generating Spotify Token")
 		print( options )
 		data = st.start_session( options[ "username" ] , options[ "password" ] )
 		access_token = data[ 0 ]
@@ -26,7 +26,7 @@ def GenerateSpotifyToken( options ):
 		}
 		return result
 	except Exception as e:
-		print( "Couldn't Generate Spotify Token" )
+		print("Couldn't Generate Spotify Token")
 		print( e )
 		return False
 
@@ -40,7 +40,7 @@ def RefreshSpotifyTokenIfNecessary():
 			spotify_personal = redis_connection.get( "PERSONAL.SPOTIFY" )
 			spotify_personal = json.loads( spotify_personal )
 		except Exception as e:
-			print( "No Spotify Personal Info Saved to Redis" )
+			print("No Spotify Personal Info Saved to Redis")
 			print( e )
 			return False
 		print( "stage 1" )
@@ -52,13 +52,14 @@ def RefreshSpotifyTokenIfNecessary():
 			spotify_token_info = {}
 		print( "stage 1.5" )
 		print( spotify_personal )
-		if "seconds_left" not in spotify_token_info:
-			print( "seconds_left is not in spotify_token_info" )
+		prit( spotify_token_info )
+		if "seconds_left" in spotify_token_info == False:
+			print("seconds_left is not in spotify_token_info")
 			spotify_token_info = GenerateSpotifyToken( spotify_personal )
 			print( spotify_token_info )
 			redis_connection.set( "STATE.SPOTIFY.TOKEN_INFO" , json.dumps( spotify_token_info ) )
 			return spotify_token_info
-		print( "stage 2" )
+		print("stage 2")
 		time_now = int( time.time() )
 		spotify_token_info[ "seconds_left" ] = spotify_token_info[ "expire_time" ] - time_now
 		if spotify_token_info[ "seconds_left" ] < 300:
