@@ -39,6 +39,7 @@ def RefreshSpotifyTokenIfNecessary( redis_connection ):
 			print( "No Spotify Personal Info Saved to Redis" )
 			print( e )
 			return False
+		print( "stage 1" )
 		try:
 			spotify_token_info = redis_connection.get( "STATE.SPOTIFY.TOKEN_INFO" )
 			spotify_token_info = json.loads( spotify_token_info )
@@ -49,7 +50,7 @@ def RefreshSpotifyTokenIfNecessary( redis_connection ):
 			spotify_token_info = GenerateSpotifyToken( spotify_personal )
 			redis_connection.set( "STATE.SPOTIFY.TOKEN_INFO" , json.dumps( spotify_token_info ) )
 			return spotify_token_info
-
+		print( "stage 2" )
 		time_now = int( time.time() )
 		spotify_token_info[ "seconds_left" ] = spotify_token_info[ "expire_time" ] - time_now
 		if spotify_token_info[ "seconds_left" ] < 300:
