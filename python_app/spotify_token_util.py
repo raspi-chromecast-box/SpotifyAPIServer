@@ -55,7 +55,7 @@ def RefreshSpotifyTokenIfNecessary():
 		print( "stage 1.5" )
 		print( spotify_personal )
 		print( spotify_token_info )
-		if "seconds_left" in spotify_token_info == False:
+		if "seconds_left" not in spotify_token_info:
 			print("seconds_left is not in spotify_token_info")
 			spotify_token_info = GenerateSpotifyToken( spotify_personal )
 			print( spotify_token_info )

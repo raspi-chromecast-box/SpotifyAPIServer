@@ -7,6 +7,7 @@ import pychromecast
 from pychromecast import Chromecast
 from pychromecast.controllers.spotify import SpotifyController
 import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
 
 # Old Example
 # https://github.com/raspi-chromecast-box/WebServer/blob/f434683eff7d2e19ac926b54cf3f3739fadb0646/node_app/commands/Spotify/Play.py
@@ -16,7 +17,8 @@ def play_currated_uris( spotify_token_info , chromecast_output_ip , uris ):
 		cast = Chromecast( chromecast_output_ip )
 		cast.wait()
 		cast.media_controller.stop()
-		client = spotipy.Spotify( auth=spotify_token_info[ "access_token" ] )
+		#client = spotipy.Spotify( auth=spotify_token_info[ "access_token" ] )
+		client = spotipy.Spotify( client_credentials_manager=SpotifyClientCredentials( client_id=spotify_token_info[ "client_id" ] , client_secret=spotify_token_info[ "client_secret" ] ) )
 		sp = SpotifyController( spotify_token_info[ "access_token" ] , spotify_token_info[ "seconds_left" ] )
 		cast.register_handler( sp )
 		sp.launch_app()
@@ -34,8 +36,8 @@ def play_currated_uris( spotify_token_info , chromecast_output_ip , uris ):
 				spotify_device_id = device['id']
 				break
 		if not spotify_device_id:
-			print('No device with id "{}" known by Spotify'.format(sp.device))
-			print('Known devices: {}'.format(devices_available['devices']))
+			print( 'No device with id "{}" known by Spotify'.format( sp.device) )
+			print( 'Known devices: {}'.format( devices_available['devices'] ) )
 			return False
 
 		client.start_playback( device_id=spotify_device_id , uris=uris )
