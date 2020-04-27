@@ -10,6 +10,9 @@ from sanic import response
 from api.api_blueprint import api_blueprint
 from commands.commands_blueprint import commands_blueprint
 
+from generic_utils import save_personal_file_to_redis
+save_personal_file_to_redis()
+
 # https://github.com/huge-success/sanic/tree/master/examples
 # https://github.com/huge-success/sanic/blob/master/examples/try_everything.py
 
