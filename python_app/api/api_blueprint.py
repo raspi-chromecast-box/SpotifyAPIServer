@@ -67,6 +67,15 @@ def token_info( request ):
 		result = { "message": "Couldn't Get Spotify Token" }
 	return json( result )
 
+@api_blueprint.route( "/token/recieve" , methods=[ "GET" , "POST" , "PUT" ] )
+def token_info( request ):
+	print( "new token recieved @ /api/token/recieve" )
+	print( request.args )
+	print( request.query_string )
+	print( request.form )
+	result = { "result" : success }
+	return json( result )
+
 @api_blueprint.route( "/uris/<message>" , methods=[ "GET" ] )
 def token_info( request , message ):
 	try:
