@@ -38,7 +38,7 @@ def play_list_currated_all_test( request ):
 	uri = redis_utils.next_in_circular_list( config[ "redis_connection" ] , 'SPOTIFY.CURRATED_URIS.ALL.LIST' )
 	uri = f"spotify:track:{uri}"
 	print( "trying to play: " + uri )
-	result = play_currated_uris( config[ "spotify_token_info" ] , config[ "chromecast_output_ip" ] , [ uri ] )
+	result = play_currated_uris( config[ "spotify_api_credentials" ] , config[ "chromecast_output_ip" ] , [ uri ] )
 	return response.text( "playing the next track in currated all circular list\n" )
 
 @commands_blueprint.route( '/play/currated' )
@@ -47,7 +47,7 @@ def play_currated( request ):
 	print( config )
 	uris = config[ "redis_connection" ].srandmember( 'SPOTIFY.CURRATED_URIS.ALL' , 200 )
 	uris = generic_utils.prepare_random_track_uris( uris )
-	result = play_currated_uris( config[ "spotify_token_info" ] , config[ "chromecast_output_ip" ] , uris )
+	result = play_currated_uris( config[ "spotify_api_credentials" ] , config[ "chromecast_output_ip" ] , uris )
 	return json( { 'result': str( result ) , 'uris': uris } )
 
 @commands_blueprint.route( '/pause' )

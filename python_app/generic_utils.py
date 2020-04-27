@@ -29,7 +29,7 @@ def get_common_config():
 	chromecast_output_uuid = str( chromecast_output_uuid , 'utf-8' )
 	return {
 		"redis_connection": redis_connection ,
-		"spotify_token_info": spotify_token_info ,
+		"spotify_api_credentials": spotify_api_credentials ,
 		"chromecast_output_ip": chromecast_output_ip ,
 		"chromecast_output_uuid": chromecast_output_uuid
 	}

@@ -12,13 +12,13 @@ from spotipy.oauth2 import SpotifyClientCredentials
 # Old Example
 # https://github.com/raspi-chromecast-box/WebServer/blob/f434683eff7d2e19ac926b54cf3f3739fadb0646/node_app/commands/Spotify/Play.py
 
-def play_currated_uris( spotify_token_info , chromecast_output_ip , uris ):
+def play_currated_uris( spotify_api_credentials , chromecast_output_ip , uris ):
 	try:
 		cast = Chromecast( chromecast_output_ip )
 		cast.wait()
 		cast.media_controller.stop()
 		#client = spotipy.Spotify( auth=spotify_token_info[ "access_token" ] )
-		client = spotipy.Spotify( client_credentials_manager=SpotifyClientCredentials( client_id=spotify_token_info[ "client_id" ] , client_secret=spotify_token_info[ "client_secret" ] ) )
+		client = spotipy.Spotify( client_credentials_manager=SpotifyClientCredentials( client_id=spotify_api_credentials[ "client_id" ] , client_secret=spotify_api_credentials[ "client_secret" ] ) )
 		sp = SpotifyController( spotify_token_info[ "access_token" ] , spotify_token_info[ "seconds_left" ] )
 		cast.register_handler( sp )
 		sp.launch_app()
