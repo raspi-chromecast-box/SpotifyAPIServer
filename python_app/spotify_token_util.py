@@ -51,8 +51,11 @@ def RefreshSpotifyTokenIfNecessary():
 			print( "No Spotify Token Info Saved to Redis" )
 			spotify_token_info = {}
 		print( "stage 1.5" )
+		print( spotify_personal )
 		if "seconds_left" not in spotify_token_info:
+			print( "seconds_left is not in spotify_token_info" )
 			spotify_token_info = GenerateSpotifyToken( spotify_personal )
+			print( spotify_token_info )
 			redis_connection.set( "STATE.SPOTIFY.TOKEN_INFO" , json.dumps( spotify_token_info ) )
 			return spotify_token_info
 		print( "stage 2" )
