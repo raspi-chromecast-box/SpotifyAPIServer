@@ -50,9 +50,11 @@ def RefreshSpotifyTokenIfNecessary():
 		except Exception as e:
 			print( "No Spotify Token Info Saved to Redis" )
 			spotify_token_info = {}
+		if spotify_token_info == False or None:
+			spotify_token_info = {}
 		print( "stage 1.5" )
 		print( spotify_personal )
-		prit( spotify_token_info )
+		print( spotify_token_info )
 		if "seconds_left" in spotify_token_info == False:
 			print("seconds_left is not in spotify_token_info")
 			spotify_token_info = GenerateSpotifyToken( spotify_personal )
