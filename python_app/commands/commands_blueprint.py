@@ -44,10 +44,11 @@ def play_list_currated_all_test( request ):
 @commands_blueprint.route( '/play/currated' )
 def play_currated( request ):
 	config = generic_utils.get_common_config()
+	print( config )
 	uris = config[ "redis_connection" ].srandmember( 'SPOTIFY.CURRATED_URIS.ALL' , 200 )
 	uris = generic_utils.prepare_random_track_uris( uris )
 	result = play_currated_uris( config[ "spotify_token_info" ] , config[ "chromecast_output_ip" ] , uris )
-	return json( { 'result': result , 'uris': uris } )
+	return json( { 'result': str( result ) , 'uris': uris } )
 
 @commands_blueprint.route( '/pause' )
 def pause( request ):
