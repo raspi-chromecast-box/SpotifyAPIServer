@@ -4,13 +4,13 @@
 import redis
 def try_to_connect_to_redis():
     try:
-        redis_connection = redis.StrictRedis(
+        rc = redis.StrictRedis(
             host="127.0.0.1" ,
             port="6379" ,
             db=1 ,
             #password=ConfigDataBase.self[ 'redis' ][ 'password' ]
             )
-        return redis_connection
+        return rc
     except Exception as e:
         return False
 
