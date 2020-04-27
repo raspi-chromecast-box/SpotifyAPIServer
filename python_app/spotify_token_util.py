@@ -9,20 +9,48 @@ from pychromecast import Chromecast
 from pychromecast.controllers.spotify import SpotifyController
 import spotify_token as st
 import spotipy
+import requests
 
 import redis_utils
 
+# def GenerateSpotifyToken( options ):
+# 	try:
+# 		print("Generating Spotify Token")
+# 		print( options )
+# 		data = st.start_session( options[ "username" ] , options[ "password" ] )
+# 		access_token = data[ 0 ]
+# 		seconds_left = data[ 1 ] - int( time.time() )
+# 		result = {
+# 			"access_token": access_token ,
+# 			"expire_time": data[ 1 ] ,
+# 			"seconds_left": seconds_left
+# 		}
+# 		return result
+# 	except Exception as e:
+# 		print("Couldn't Generate Spotify Token")
+# 		print( e )
+# 		return False
+
+# https://developer.spotify.com/documentation/general/guides/authorization-guide/#client-credentials-flow
+# https://developer.spotify.com/documentation/general/guides/scopes/
 def GenerateSpotifyToken( options ):
 	try:
-		print("Generating Spotify Token")
-		print( options )
-		data = st.start_session( options[ "username" ] , options[ "password" ] )
-		access_token = data[ 0 ]
-		seconds_left = data[ 1 ] - int( time.time() )
+		headers = {
+			'Authorization': f"Basic {options[ 'base64_clientid_clientsecret' ]}" ,
+		}
+		data = {
+			'grant_type': 'client_credentials' ,
+			#'scope': 'streaming app-remote-control'
+			'scope': 'ugc-image-upload user-read-playback-state user-modify-playback-state user-read-currently-playing streaming app-remote-control user-read-email user-read-private playlist-read-collaborative playlist-modify-public playlist-read-private playlist-modify-private user-library-modify user-library-read user-top-read user-read-playback-position user-read-recently-played user-follow-read user-follow-modify'
+		}
+		response = requests.post( 'https://accounts.spotify.com/api/token' , headers=headers , data=data )
+		token_info = response.json()
+		print( token_info )
+		expire_time = int( time.time() ) + token_info[ "expires_in" ]
 		result = {
-			"access_token": access_token ,
-			"expire_time": data[ 1 ] ,
-			"seconds_left": seconds_left
+			"access_token": token_info[ "access_token" ] ,
+			"expire_time": expire_time ,
+			"seconds_left": token_info[ "expires_in" ]
 		}
 		return result
 	except Exception as e:
