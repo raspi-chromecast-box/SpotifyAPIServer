@@ -65,10 +65,9 @@ def RefreshSpotifyTokenIfNecessary( redis_connection ):
 		print( e )
 		return False
 
-def get_spotify_token_info( redis_connection=None ):
+def get_spotify_token_info():
 	try:
-		if redis_connection is None:
-			redis_connection = redis_utils.try_to_connect_to_redis()
+		redis_connection = redis_utils.try_to_connect_to_redis()
 		if redis_connection == False:
 			return False
 		print("we have redis")
