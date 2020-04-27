@@ -21,7 +21,7 @@ def prepare_random_track_uris( uris ):
 
 
 def save_personal_file_to_redis():
-	personal_file_path = os.path.join( os.path.expanduser( "~" ) , ".config" , "raspi_chromecast_box.json" )
+	personal_file_path = os.path.join( os.path.expanduser( "~" ) , ".config" , "personal" , "raspi_chromecast_box.json" )
 	with open( personal_file_path ) as f:
 		personal_file = json.load( f )
 	personal_spotify = personal_file[ "personal" ][ "spotify" ]
